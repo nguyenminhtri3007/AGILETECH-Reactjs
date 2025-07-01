@@ -2,28 +2,61 @@ import './application.component.scss';
 import * as AuthService from "../data/services/auth.service";
 import { AuthModel } from '../data/models/auth.model';
 import { ErrorModel } from '../common/model/error.model';
+import { useState, FC } from 'react';
 
-const ApplicationComponent = () => {
-  
+interface ApplicationComponentProps {
+  onLoginSuccess?: () => void;
+}
+
+const ApplicationComponent: FC<ApplicationComponentProps> = ({ onLoginSuccess }) => {
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const signIn = async () => {
+    setError("");
+    setLoading(true);
     try {
-      /** T fake thôi, m tự làm giao diện đi **/
-      const model = new AuthModel("adminRefresh");
-      const resp = await AuthService.signIn(model);
-      console.log("Đăng nhập thành công");
-    } catch (error) {
-      console.log(error);
-      if(error instanceof ErrorModel){
-        console.log("ye");
+      const model = new AuthModel(username);
+      await AuthService.signIn(model);
+      if (onLoginSuccess) onLoginSuccess();
+    } catch (err) {
+      if (err instanceof ErrorModel) {
+        setError(err.message || "Đăng nhập thất bại");
+      } else {
+        setError("Đăng nhập thất bại");
       }
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
   return (
-    <div className="App">
-      <input />
-      <button onClick={() => signIn()}>Login</button>
+    <div className="login-page">
+      <div className="login-logo">
+        <span className="dot dot1"></span>
+        <span className="dot dot2"></span>
+      </div>
+      <form className="login-form" onSubmit={e => { e.preventDefault(); signIn(); }}>
+        <h1 className="login-title">Sign In</h1>
+        <div className="form-group">
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            type="text"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            autoComplete="username"
+            required
+          />
+        </div>
+        {error && <div className="error-message">{error}</div>}
+        <button type="submit" className="login-btn" disabled={loading}>
+          {loading ? "Signing In..." : "Sign In"}
+        </button>
+      </form>
     </div>
   );
 }
- 
+
 export default ApplicationComponent;

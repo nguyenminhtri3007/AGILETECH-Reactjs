@@ -6,29 +6,29 @@
 }
 
 .login-logo {
- margin-bottom: 32px;
- margin-left: 100px;
- display: flex;
- align-items: flex-end; 
-  .dot{
-    &.dot1 {
-          background: #9C40FF;
-          width: 19.88px;
-          height: 19.88px;
-          border-radius: 50%;
-        }
-        
-        &.dot2 {
-          background: #F063B8;
-           width: 19.88px;
-           height: 35px;
-           border-radius: 20px;
-           margin-left: 9px;
-        }
-  }
+  position: absolute;
+  top: 32px;
+  left: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  align-items: flex-end;
 }
-
-
+.dot {
+  display: inline-block;
+  border-radius: 50%;
+}
+.dot1 {
+  width: 16px;
+  height: 16px;
+  background: #b266ff;
+}
+.dot2 {
+  width: 20px;
+  height: 28px;
+  background: #f06292;
+  border-radius: 8px;
+}
 
 .login-form {
   margin: auto;

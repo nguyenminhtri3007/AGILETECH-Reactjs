@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
@@ -6,6 +6,7 @@ import ApplicationComponent from './screens/application.component';
 import HomePage from './screens/homepage.component';
 import Profile from './screens/profile.component';
 import * as AuthService from './data/services/auth.service';
+import { AppConfig } from './common/config/app.config';
 
 const RootApp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,12 +32,23 @@ const RootApp = () => {
     setPage('profile');
   };
 
+  useEffect(() => {
+    const appConfig = new AppConfig();
+    const isLogged = appConfig.getAccessToken();
+    if(isLogged){
+      setIsLoggedIn(true);
+    }
+  }, [])
+
   if (page === 'login') {
     return <ApplicationComponent onLoginSuccess={handleLoginSuccess} />;
   }
   if (page === 'profile') {
     return <Profile onLogout={handleLogout} />;
   }
+
+  
+
   return <HomePage isLoggedIn={isLoggedIn} onSignIn={() => setPage('login')} onLogout={handleLogout} onProfile={handleProfile} />;
 };
 

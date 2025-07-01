@@ -26,21 +26,21 @@ export class AppConfig {
         }
     }
 
-     getUserInfo() {
-        try {
-            const userInfo = localStorage.getItem('userInfo');
-            if (userInfo) {
-                return JSON.parse(userInfo);
-            }
+    getUserInfo() {
+      try {
+          const userInfo = localStorage.getItem('userInfo');
+          if (userInfo) {
+              return userInfo;
+          }
 
-            return null;
-        } catch (error) {
-            throw error;
-        }
+          return null;
+      } catch (error) {
+          throw error;
+      }
     }
 
-     setUserInfo(userInfo: UserModel) {
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    setUserInfo(username: string) {
+      localStorage.setItem('userInfo', username);
     }
 
      getAccessToken() {

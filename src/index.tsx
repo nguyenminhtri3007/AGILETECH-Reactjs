@@ -5,7 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import ApplicationComponent from './screens/application.component';
 import HomePage from './screens/homepage.component';
 import Profile from './screens/profile.component';
-import { logout } from './data/services/auth.service';
+import * as AuthService from './data/services/auth.service';
 
 const RootApp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,15 +15,18 @@ const RootApp = () => {
     setIsLoggedIn(true);
     setPage('home');
   };
-   const handleLogout = async () => {
-  try {
-    await logout();
-  } catch (e) {
-    console.error('Logout error:', e);
-  }
-  setIsLoggedIn(false);
-  setPage('home');
-};
+
+  const handleLogout = async () => {
+    try {
+      await AuthService.logout();
+      setIsLoggedIn(false);
+      setPage('home');
+    } catch (e) {
+      console.error('Logout error:', e);
+    }
+  
+  };
+
   const handleProfile = () => {
     setPage('profile');
   };

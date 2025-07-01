@@ -1,6 +1,5 @@
 import { AppConfig } from "../../common/config/app.config";
 import CustomAxios from "../../common/config/axios.config";
-import { HttpCode } from "../../common/resource/http-code";
 import { HandleHttp } from "../../common/service/handle-http";
 import { AuthModel } from "../models/auth.model";
 
@@ -24,6 +23,7 @@ export const signIn = async (data: AuthModel) => {
     );
     appConfig.setAccessToken(resp.data?.accessToken);
     appConfig.setRefreshToken(resp.data?.refreshToken);
+    appConfig.setTimeExpires();
     return true;
   } catch (error) {
     throw HandleHttp.exception(error);
@@ -33,15 +33,15 @@ export const signIn = async (data: AuthModel) => {
 export const refreshToken = async () => {
   try {
     const domain = appConfig.getDomain();
-    const refreshToken = await appConfig.getRefreshToken();
+    const refreshToken = appConfig.getRefreshToken();
     if (!refreshToken) {
       throw new Error("Không tìm thấy refresh token.");
     }
     const resp = await CustomAxios.post(
-      `${domain}/auth/refreshToken`,
+      `${domain}/auth/refresh-token`,
       { refreshToken }
     );
-    appConfig.setAccessToken(resp.data?.accessToken);
+   
     return resp.data?.accessToken;
   } catch (error) {
     throw HandleHttp.exception(error);
@@ -51,8 +51,7 @@ export const refreshToken = async () => {
 export const logout = async () => {
   try {
     const domain = appConfig.getDomain();
-    const accessToken = await appConfig.getAccessToken();
-    await CustomAxios.post(`${domain}/auth/logout`, { accessToken });
+    await CustomAxios.delete(`${domain}/auth/logout`);
     await appConfig.clear();
     return true;
   } catch (error) {

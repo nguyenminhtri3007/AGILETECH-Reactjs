@@ -9,11 +9,11 @@ export class AppConfig {
         return this.domain;
     }
 
-    async setUserId(userId: number){
+     setUserId(userId: number){
       localStorage.setItem('userId', JSON.stringify(userId));
     }
 
-    async getUserId(){
+     getUserId(){
         try {
             const userId = localStorage.getItem('userId');
             if (userId) {
@@ -26,7 +26,7 @@ export class AppConfig {
         }
     }
 
-    async getUserInfo() {
+     getUserInfo() {
         try {
             const userInfo = localStorage.getItem('userInfo');
             if (userInfo) {
@@ -39,11 +39,11 @@ export class AppConfig {
         }
     }
 
-    async setUserInfo(userInfo: UserModel) {
+     setUserInfo(userInfo: UserModel) {
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
     }
 
-    async getAccessToken() {
+     getAccessToken() {
       const accessToken = localStorage.getItem('accessToken');
       if (!accessToken) {
         return null;
@@ -52,11 +52,11 @@ export class AppConfig {
       return accessToken;
     }
 
-    async setAccessToken(token: string) {
+     setAccessToken(token: string) {
       localStorage.setItem('accessToken', token);
     }
 
-    async getRefreshToken() {
+     getRefreshToken() {
       const refreshToken = localStorage.getItem('refreshToken');
       if (!refreshToken) {
           return null;
@@ -65,11 +65,29 @@ export class AppConfig {
       return refreshToken;
     }
 
-    async setRefreshToken(token: string) {
+     setRefreshToken(token: string) {
       localStorage.setItem('refreshToken', token);
     }
 
+    setTimeExpires() {
+      let endTime = Date.now() + 2 * 60 * 1000;
+      localStorage.setItem('expireTime', endTime.toString());
+    }
+
+    isExpired() {
+      const endTimeStr = localStorage.getItem('expireTime');
+
+      if (endTimeStr !== null) {
+        const endTime = parseInt(endTimeStr, 10);
+        const now = Date.now();
+        return now >= endTime;
+      }
+
+      return true;
+    }
+
+
     async clear() {
-       localStorage.clear();
+      localStorage.clear();
     }
 }

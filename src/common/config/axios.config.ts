@@ -1,6 +1,8 @@
 import axios, { AxiosError } from "axios";
 import { AppConfig } from "./app.config";
 import * as AuthService from "../../data/services/auth.service";
+import { ErrorModel } from "../model/error.model";
+import { HttpCode } from "../resource/http-code";
 
 const appConfig = new AppConfig();
 
@@ -18,12 +20,22 @@ CustomAxios.interceptors.request.use(
       const isExpired = appConfig.isExpired();
       if(isExpired){
         try {
+          const isRefreshExpired = appConfig.isRefreshExpires();
+          if(isRefreshExpired){
+            throw new ErrorModel(HttpCode.UNAUTHORIZED, "Hết phiên đăng nhập");
+          }
           const newAccessToken = await AuthService.refreshToken();
           appConfig.setAccessToken(newAccessToken);
           appConfig.setTimeExpires();
           config.headers.Authorization = `Bearer ${newAccessToken}`;
         } catch (error) {
-          console.log('>>> Error: ', error);
+          console.log('Error: ', error);
+          if(error instanceof ErrorModel){
+            if(error.status === HttpCode.UNAUTHORIZED){
+              appConfig.clear();
+              throw (new AxiosError("Hết phiên đăng nhập", HttpCode.UNAUTHORIZED + ""));
+            }
+          }
         }
       }
     }
@@ -32,6 +44,7 @@ CustomAxios.interceptors.request.use(
   },
   (error: AxiosError) => {
     console.error(">>> Lỗi khi gửi request:", error);
+    console.log('aaaaaaaaaaaaaaa');
     return Promise.reject(error);
   }
 );

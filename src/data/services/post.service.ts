@@ -15,6 +15,7 @@ export const getPosts = async (title?: string, page?: number) => {
     const resp = await CustomAxios.get(`${domain}/posts`, { params });
     return resp.data;
   } catch (error) {
+    console.log(error);
     throw HandleHttp.exception(error);
   }
 };

@@ -24,6 +24,7 @@ export const signIn = async (data: AuthModel) => {
     appConfig.setAccessToken(resp.data?.accessToken);
     appConfig.setRefreshToken(resp.data?.refreshToken);
     appConfig.setTimeExpires();
+    appConfig.setRefreshTimeExpires();
     return true;
   } catch (error) {
     throw HandleHttp.exception(error);

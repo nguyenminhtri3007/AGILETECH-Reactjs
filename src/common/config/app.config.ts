@@ -86,6 +86,22 @@ export class AppConfig {
       return true;
     }
 
+    setRefreshTimeExpires(){
+      let endTime = Date.now() + 24 * 60 * 60 * 1000;
+      localStorage.setItem('refreshExpireTime', endTime.toString());
+    }
+
+    isRefreshExpires(){
+      const endTimeStr = localStorage.getItem('refreshExpireTime');
+
+      if (endTimeStr !== null) {
+        const endTime = parseInt(endTimeStr, 10);
+        const now = Date.now();
+        return now >= endTime;
+      }
+
+      return true;
+    }
 
     async clear() {
       localStorage.clear();

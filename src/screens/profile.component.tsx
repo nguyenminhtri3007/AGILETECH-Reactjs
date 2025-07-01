@@ -33,6 +33,8 @@ const Profile: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
         setPosts([]);
         setTotalPages(1);
       }
+    } catch(e){
+      console.log(e);
     } finally {
       setLoading(false);
     }
@@ -115,6 +117,7 @@ const Profile: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
       setShowForm(false);
       fetchPosts();
     } catch (err: any) {
+      console.log(err);
       setFormError(err?.message || 'Có lỗi xảy ra');
     }
   };
